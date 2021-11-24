@@ -1,3 +1,9 @@
 body {
-    background-color: ghostwhite;
+    background-color: pink;
+}
+
+.logo-lg {
+    width: 40%;
+    height: auto;
+    margin: 0 auto;
 }
