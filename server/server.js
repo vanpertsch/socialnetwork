@@ -1,15 +1,25 @@
 const express = require("express");
-const app = express();
+
+// const app = express();
+//export for testing
+const app = exports.app = express();
 const compression = require("compression");
 const path = require("path");
-
-const db = require("../db.js");
-
-const { hash, compare } = require("../bc.js");
-
 const cookieSession = require('cookie-session');
 
 
+
+const db = require("../db.js");
+const { hash, compare } = require("../bc.js");
+
+
+// const { requireLoggedIn, requireNotSigned } = require("../middleware/authorization.js");
+const { authRouter } = require("../routers/auth-router.js");
+const { resetRouter } = require("../routers/reset.js");
+// const { signedRouter } = require("./routers/signed.js");
+// const { signersRouter } = require("./routers/signers.js");
+
+const { sendEmail } = require("./ses.js");
 
 // ---------------------------------Start Middleware-------------------------
 
@@ -50,46 +60,26 @@ app.use((req, res, next) => {
     console.log(`${req.method}|${req.url}`);
     next();
 });
-// ---------------------------------End Middleware-------------------------
 
 
+// ---------------------------------Own Middleware-------------------------≈
+
+app.use(authRouter);
+app.use(resetRouter);
+// app.use(profileRouter);
+// app.use(signersRouter);
+
+// ---------------------------------End Middleware-------------------------≈
 
 
-
-app.get('/user/id.json', function (req, res) {
-    res.json({
-        userId: req.session.userId
-    });
+app.get("/email", function (req, res) {
+    sendEmail("serious.sword@spicedling.email", "test", "test");
 });
-
-app.post("/registration.json", (req, res) => {
-    const { first, last, email, password } = req.body;
-    console.log(first, last, email, password);
-
-    hash(password)
-        .then(hashedPW => {
-            console.log("hashedPW", hashedPW)
-            return db.addUser(first, last, email, hashedPW);
-        })
-        .then((result) => {
-            req.session.userId = result.rows[0].id;
-            result.success = true;
-            res.json(result);
-            console.log("yay insertet", req.session);
-        }).catch((err) => {
-            console.log("err in addUser", err);
-            res.render("profile", {
-                error: "Please try again"
-            });
-        });
-});
-
-
-
 
 //last possible route . sends allways back index.html
 app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "..", "client", "index.html"));
+
 });
 
 app.listen(process.env.PORT || 3001, function () {
