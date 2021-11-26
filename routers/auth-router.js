@@ -15,18 +15,15 @@ router.get('/user/id.json', function (req, res) {
 
 router.post("/registration.json", requireNotLoggedIn, (req, res) => {
     const { first, last, email, password } = req.body;
-    console.log(first, last, email, password);
-
     hash(password)
         .then(hashedPW => {
-            console.log("hashedPW", hashedPW);
             return db.addUser(first, last, email, hashedPW);
         })
         .then((result) => {
             req.session.userId = result.rows[0].id;
             result.success = true;
             res.json(result);
-            console.log("yay insertet", req.session);
+            console.log("yay insertet");
         }).catch((err) => {
             console.log("err in addUser", err);
             return res.status(err.status || 500).send({
@@ -43,7 +40,6 @@ router.post("/registration.json", requireNotLoggedIn, (req, res) => {
 
 router.post("/login.json", requireNotLoggedIn, (req, res) => {
     const { email, password } = req.body;
-    console.log(email, password);
     db.checkEmail(email).then(result => {
         if (result == undefined) {
             result.error = true;
@@ -51,7 +47,6 @@ router.post("/login.json", requireNotLoggedIn, (req, res) => {
         } else {
             return db.getPassword(email)
                 .then(({ rows }) => {
-                    console.log("password, rows[0].password", password, rows[0].password);
                     return compare(password, rows[0].password);
                 }).then(result => {
                     //if user is already registered:
@@ -82,6 +77,25 @@ router.post("/login.json", requireNotLoggedIn, (req, res) => {
 });
 
 
+
+router.get("/user/profile/:id", (req, res) => {
+    const user_id = req.params.id;
+
+    db.getUserProfile(user_id)
+        .then(({ rows }) => {
+            return rows[0];
+        }).then(result => {
+            return res.json(result);
+        }).catch((err) => {
+            console.log("err in getUserProfile", err);
+            return res.status(err.status || 500).send({
+                error: {
+                    status: err.status || 500,
+                    // message: err.message || "Internal Server Error",
+                },
+            });
+        });
+});
 // // logout route to delete your cookies
 // router.get("/logout", (req, res) => {
 //     req.session = null;

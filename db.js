@@ -9,7 +9,7 @@ const db = spicedPg(process.env.DATABASE_URL || `postgres:${dbUsername}:${dbUser
 console.log("[db] Connecting to ", database);
 
 
-// ----------------------Adding------------------------------------------------
+// ----------------------ADD------------------------------------------------
 module.exports.addUser = (first, last, email, password) => {
     const q = `INSERT INTO users (first,last,email,password) VALUES($1,$2,$3,$4) RETURNING id`;
     const params = [first, last, email, password];
@@ -21,6 +21,18 @@ module.exports.addCode = (code, email) => {
     return db.query(q, params);
 };
 
+module.exports.addImage = (url, email) => {
+    const q = `UPDATE users SET img_url = $1 WHERE users.email = $2 RETURNING users.img_url, users.first, users.last`;
+    const params = [url, email];
+    return db.query(q, params);
+};
+
+// ---------------------UPDATE------------------------------------------------
+module.exports.updatePassword = (email, password) => {
+    const q = `UPDATE users SET password=$2  WHERE users.email = $1`;
+    const params = [email, password];
+    return db.query(q, params);
+};
 
 // ---------------------Check------------------------------------------------
 module.exports.checkEmail = (email) => {
@@ -29,8 +41,21 @@ module.exports.checkEmail = (email) => {
     return db.query(q, params);
 };
 
+module.exports.validateCode = (code, email) => {
+    const q = `SELECT * FROM password_reset_codes WHERE (password_reset_codes.code = $1) AND (password_reset_codes.email = $2) AND (CURRENT_TIMESTAMP - created_at < INTERVAL '10 minutes')`;
+    const params = [code, email];
+    return db.query(q, params);
+};
+
 
 // ---------------------GET--------------------------------------------------
+
+module.exports.getUserProfile = (id) => {
+    const q = `SELECT first,last,email,img_url FROM users WHERE users.id = $1`;
+    const params = [id];
+    return db.query(q, params);
+};
+
 module.exports.getPassword = (email) => {
     const q = `SELECT password  FROM users WHERE email = $1`;
     const params = [email];
@@ -42,3 +67,5 @@ module.exports.getUserId = (email) => {
     const params = [email];
     return db.query(q, params);
 };
+
+

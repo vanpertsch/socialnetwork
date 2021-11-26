@@ -16,7 +16,7 @@ const { hash, compare } = require("../bc.js");
 // const { requireLoggedIn, requireNotSigned } = require("../middleware/authorization.js");
 const { authRouter } = require("../routers/auth-router.js");
 const { resetRouter } = require("../routers/reset.js");
-// const { signedRouter } = require("./routers/signed.js");
+const { uploadRouter } = require("../routers/upload.js");
 // const { signersRouter } = require("./routers/signers.js");
 
 const { sendEmail } = require("./ses.js");
@@ -66,7 +66,7 @@ app.use((req, res, next) => {
 
 app.use(authRouter);
 app.use(resetRouter);
-// app.use(profileRouter);
+app.use(uploadRouter);
 // app.use(signersRouter);
 
 // ---------------------------------End Middleware-------------------------≈
@@ -78,6 +78,7 @@ app.get("/email", function (req, res) {
 
 //last possible route . sends allways back index.html
 app.get("*", function (req, res) {
+    console.log("start route");
     res.sendFile(path.join(__dirname, "..", "client", "index.html"));
 
 });

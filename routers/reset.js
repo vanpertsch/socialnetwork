@@ -1,5 +1,5 @@
 const express = require("express");
-
+const { hash, compare } = require("../bc.js");
 const db = require("../db.js");
 
 const router = express.Router();
@@ -11,29 +11,21 @@ const { sendEmail } = require("../server/ses.js");
 
 
 router.post("/password/reset/start", (req, res) => {
-
     let { email } = req.body;
-    console.log(req.body);
     db.checkEmail(email)
         .then(result => {
-            console.log("checkEmail", result);
             if (result == undefined) {
-                console.log("email not here");
-                // result.error = true;
-                // return res.json(result);
+                result.error = true;
+                return res.json(result);
             } else {
-
-                const randomString = cryptoRandom({
-                    length: 8
-                });
-                console.log(randomString);
+                const randomString = cryptoRandom({ length: 8 });
 
                 db.addCode(randomString, email)
                     .then((result) => {
                         sendEmail("serious.sword@spicedling.email", "New password", `here is your code ${randomString}. Use ist to get set a new password to your existing account`);
                         result.success = true;
                         res.json(result);
-                        console.log("yay insertet", req.session);
+                        console.log("yay insertet");
                     }).catch((err) => {
                         console.log("err in addCode", err);
                         return res.status(err.status || 500).send({
@@ -56,6 +48,47 @@ router.post("/password/reset/start", (req, res) => {
 
 
 
+});
+
+router.post("/password/reset/confirm", (req, res) => {
+    let { code, password, email } = req.body;
+    console.log("/password/reset/confirm", code, password, email);
+    db.validateCode(code, email)
+        .then(result => {
+            console.log("validateCode", result);
+            if (result == undefined) {
+                console.log("validateCode no success");
+                result.error = true;
+                return res.json(result);
+            } else {
+                hash(password)
+                    .then(hashedPW => {
+                        console.log("hashedPW", hashedPW);
+                        return db.updatePassword(email, hashedPW);
+                    })
+                    .then((result) => {
+                        result.success = true;
+                        res.json(result);
+                        console.log("yay insertet", req.session);
+                    }).catch((err) => {
+                        console.log("err in updatePassword", err);
+                        return res.status(err.status || 500).send({
+                            error: {
+                                status: err.status || 500,
+                                // message: err.message || "Internal Server Error",
+                            },
+                        });
+                    });
+            }
+        }).catch((err) => {
+            console.log("err in validateCode", err);
+            return res.status(err.status || 500).send({
+                error: {
+                    status: err.status || 500,
+                    // message: err.message || "Internal Server Error",
+                },
+            });
+        });
 });
 
 module.exports.resetRouter = router;

@@ -1,5 +1,5 @@
 import { Component } from 'react';
-
+import { Link } from 'react-router-dom';
 export default class ResetPassword extends Component {
 
     constructor(props) {
@@ -32,18 +32,18 @@ export default class ResetPassword extends Component {
                     // location.replace('/');
                     this.setState({
                         stage: 2
-                    });
+                    }, () => console.log("submitStage1", this.state));
                 } else {
                     //this.state runs asynchronous. to see the change we have to pass a cb function
                     this.setState({
                         error: true
-                    }, () => console.log(this.state));
+                    }, () => console.log("submitStage1", this.state));
                 }
             }
-        )
+        );
     }
     submitStage2() {
-        fetch('/password/reset/', {
+        fetch('/password/reset/confirm', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -62,7 +62,7 @@ export default class ResetPassword extends Component {
                     //a user should not go back to register again. the url is no longer in location history
                     // location.replace('/');
                     this.setState({
-                        stage: 2
+                        stage: 3
                     });
                 } else {
                     //this.state runs asynchronous. to see the change we have to pass a cb function
@@ -71,26 +71,35 @@ export default class ResetPassword extends Component {
                     }, () => console.log(this.state));
                 }
             }
-        )
+        );
     }
     render() {
         return (
             <div>
+                <h1>Reset Password</h1>
                 {this.state.error && <div className='error'>Something went wrong. Please try again</div>}
 
                 {this.state.stage == 1 &&
                     <div>
-                        <h1>Stage 1</h1>
+
+                        <p>Please enter the email address with wich you registered. We will send you an email with further information</p>
                         <input onChange={(e) => this.handleChange(e)} name="email" />
                         <button onClick={() => this.submitStage1()}>submit</button>
                     </div>
                 }
                 {this.state.stage == 2 &&
                     <div>
-                        <h1>Stage 2</h1>
+                        <p>Please enter the code you recieved per mail</p>
                         <input onChange={(e) => this.handleChange(e)} name="code" />
+                        <p>Please enter a new password</p>
                         <input onChange={(e) => this.handleChange(e)} name="password" />
                         <button onClick={() => this.submitStage2()}>submit</button>
+                    </div>
+                }
+                {this.state.stage == 3 &&
+                    <div>
+                        <p>PSuccess!</p>
+                        <Link to="/login">Click here to Log in!</Link>
                     </div>
                 }
 

@@ -7,3 +7,8 @@ body {
     height: auto;
     margin: 0 auto;
 }
+
+.profileimg {
+    width: 80px;
+    height: 80px;
+}
