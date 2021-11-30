@@ -9,17 +9,17 @@ const cookieSession = require('cookie-session');
 
 
 
-const db = require("../db.js");
-const { hash, compare } = require("../bc.js");
+const db = require("../helper/db.js");
+const { hash, compare } = require("../helper/bc.js");
 
 
 // const { requireLoggedIn, requireNotSigned } = require("../middleware/authorization.js");
-const { authRouter } = require("../routers/auth-router.js");
-const { resetRouter } = require("../routers/reset.js");
-const { uploadRouter } = require("../routers/upload.js");
-// const { signersRouter } = require("./routers/signers.js");
+const { authRouter } = require("./routers/auth-router.js");
+const { resetRouter } = require("./routers/reset.js");
+const { uploadRouter } = require("./routers/upload.js");
+const { usersRouter } = require("./routers/users.js");
 
-const { sendEmail } = require("./ses.js");
+const { sendEmail } = require("../helper/ses.js");
 
 // ---------------------------------Start Middleware-------------------------
 
@@ -67,6 +67,7 @@ app.use((req, res, next) => {
 app.use(authRouter);
 app.use(resetRouter);
 app.use(uploadRouter);
+app.use(usersRouter);
 // app.use(signersRouter);
 
 // ---------------------------------End Middleware-------------------------≈

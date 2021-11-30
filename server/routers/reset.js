@@ -1,12 +1,12 @@
 const express = require("express");
-const { hash, compare } = require("../bc.js");
-const db = require("../db.js");
+const { hash, compare } = require("../../helper/bc.js");
+const db = require("../../helper/db.js");
 
 const router = express.Router();
 
 
 const cryptoRandom = require('crypto-random-string');
-const { sendEmail } = require("../server/ses.js");
+const { sendEmail } = require("../../helper/ses.js");
 
 
 

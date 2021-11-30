@@ -10,6 +10,6 @@ fetch('/user/id.json')
         if (!data.userId) {
             ReactDOM.render(<Welcome />, document.querySelector("main"));
         } else {
-            ReactDOM.render(<App user={data.userId} />, document.querySelector("main"));
+            ReactDOM.render(<App user_id={data.userId} />, document.querySelector("main"));
         }
     });

@@ -7,7 +7,8 @@ DROP TABLE IF EXISTS password_reset_codes;
      last VARCHAR(255) NOT NULL CHECK (last != ''),
      email VARCHAR(255) NOT NULL UNIQUE CHECK (email != ''),
      password VARCHAR(255) NOT NULL,
-     img_url VARCHAR ,
+     img_url VARCHAR,
+     bio TEXT,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
  );
 
@@ -17,3 +18,6 @@ DROP TABLE IF EXISTS password_reset_codes;
       code VARCHAR(255) NOT NULL CHECK (code != ''),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
+
+
+ ALTER TABLE users ADD COLUMN bio VARCHAR;

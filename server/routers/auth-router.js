@@ -1,8 +1,8 @@
 const express = require("express");
 const { requireNotLoggedIn, requireLoggedIn } = require("../middleware/authorization.js");
 
-const { hash, compare } = require("../bc.js");
-const db = require("../db.js");
+const { hash, compare } = require("../../helper/bc.js");
+const db = require("../../helper/db.js");
 
 const router = express.Router();
 
@@ -83,11 +83,8 @@ router.get("/user/profile/:id", (req, res) => {
 
     db.getUserProfile(user_id)
         .then(({ rows }) => {
-            return rows[0];
-        }).then(result => {
-            return res.json(result);
+            return res.json(rows[0]);
         }).catch((err) => {
-            console.log("err in getUserProfile", err);
             return res.status(err.status || 500).send({
                 error: {
                     status: err.status || 500,

@@ -1,13 +1,13 @@
 const express = require("express");
 // const { requireSigned, requireLoggedIn } = require("../middleware/authorization.js");
 
-const db = require("../db.js");
+const db = require("../../helper/db.js");
 
 const multer = require('multer');
 const uidSafe = require('uid-safe');
 const path = require('path');
 
-const s3 = require('../s3');
+const s3 = require('../../helper/s3');
 
 const router = express.Router();
 
@@ -60,6 +60,50 @@ router.post('/upload', uploader.single("file"), s3.upload, (req, res) => {
         });
     }
 });
+
+
+
+// router.post('/upload/bio', (req, res) => {
+//     console.log("*****************");
+//     console.log("POST /upload/bio Route");
+//     console.log("*****************");
+
+
+//     const bio = req.body.bio;
+//     const email = req.body.email;
+
+
+//     db.addBio(bio, email)
+//         .then(({ rows }) => {
+//             return res.json(rows[0]);
+//         })
+//         .catch(err => console.log("error in addBio", err));
+
+
+// });
+
+
+
+
+
+
+router.post('/upload/bio', async (req, res) => {
+    console.log("*****************");
+    console.log("POST /upload/bio Route");
+    console.log("*****************");
+
+
+    const bio = req.body.bio;
+    const email = req.body.email;
+
+    try {
+        const { rows } = await db.addBio(bio, email);
+        res.json(rows[0]);
+    } catch (err) { console.log("error in addBio", err); }
+
+
+});
+
 
 module.exports.uploadRouter = router;
 

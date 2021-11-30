@@ -18,7 +18,7 @@ export default class Uploader extends Component {
     upload() {
         const formData = new FormData();
         formData.append('file', this.state.file);
-        formData.append('email', this.props.user_profile);
+        formData.append('email', this.props.email);
 
 
         fetch('/upload', {
@@ -38,12 +38,12 @@ export default class Uploader extends Component {
     render() {
         return (
             <>
-                <div>
+                <div className="uploader">
 
                     <input id="file" name="file" type="file" accept="image/*" onChange={(e) => this.setFile(e)} />
                     <label htmlFor="file"><span>Select Image</span></label>
+                    <button onClick={() => this.upload()}>Upload Image</button>
                 </div>
-                <button onClick={() => this.upload()}>Upload Image</button>
             </>
         )
     }

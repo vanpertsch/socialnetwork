@@ -26,6 +26,11 @@ module.exports.addImage = (url, email) => {
     const params = [url, email];
     return db.query(q, params);
 };
+module.exports.addBio = (bio, email) => {
+    const q = `UPDATE users SET bio = $1 WHERE users.email = $2 RETURNING users.bio`;
+    const params = [bio, email];
+    return db.query(q, params);
+};
 
 // ---------------------UPDATE------------------------------------------------
 module.exports.updatePassword = (email, password) => {
@@ -51,7 +56,7 @@ module.exports.validateCode = (code, email) => {
 // ---------------------GET--------------------------------------------------
 
 module.exports.getUserProfile = (id) => {
-    const q = `SELECT first,last,email,img_url FROM users WHERE users.id = $1`;
+    const q = `SELECT first,last,email,img_url,bio FROM users WHERE users.id = $1`;
     const params = [id];
     return db.query(q, params);
 };
@@ -67,5 +72,27 @@ module.exports.getUserId = (email) => {
     const params = [email];
     return db.query(q, params);
 };
+
+
+module.exports.getNewestUsers = (id) => {
+    const q = `SELECT first, last, id, img_url FROM users WHERE id != $1 ORDER BY id DESC LIMIT 3`;
+    const params = [id];
+    return db.query(q, params);
+
+};
+
+module.exports.getUsers = (id, term) => {
+    console.log("getUsers", term);
+    const q = `SELECT first, last, id, img_url FROM users WHERE first ILIKE $2 OR last ILIKE $2 OR CONCAT(first, ' ',last) ILIKE $2 AND id != $1 ORDER BY id DESC`;
+    const params = [id, term + "%"];
+    return db.query(q, params);
+
+};
+// module.exports.getNewestUsers = (id,term) => {
+//     const q = `SELECT first, last, id, img_url FROM users WHERE NOT id = $1 ORDER BY id DESC LIMIT 3`;
+
+//     const params = [id,term];
+//     return db.query(q, params);
+// };
 
 
