@@ -55,11 +55,6 @@ module.exports.validateCode = (code, email) => {
 
 // ---------------------GET--------------------------------------------------
 
-module.exports.getUserProfile = (id) => {
-    const q = `SELECT first,last,email,img_url,bio FROM users WHERE users.id = $1`;
-    const params = [id];
-    return db.query(q, params);
-};
 
 module.exports.getPassword = (email) => {
     const q = `SELECT password  FROM users WHERE email = $1`;
@@ -73,13 +68,29 @@ module.exports.getUserId = (email) => {
     return db.query(q, params);
 };
 
+module.exports.getUserProfile = (id) => {
+    const q = `SELECT first,last,email,img_url,bio FROM users WHERE users.id = $1`;
+    const params = [id];
+    return db.query(q, params);
+};
+
+module.exports.getOtherProfile = (id) => {
+    const q = `SELECT first, last, id, img_url,bio FROM users WHERE users.id = $1`;
+    const params = [id];
+    return db.query(q, params);
+};
+
+
+
 
 module.exports.getNewestUsers = (id) => {
-    const q = `SELECT first, last, id, img_url FROM users WHERE id != $1 ORDER BY id DESC LIMIT 3`;
+    const q = `SELECT first, last, id, img_url FROM users WHERE users.id <> $1 ORDER BY id DESC LIMIT 3`;
     const params = [id];
     return db.query(q, params);
 
 };
+
+
 
 module.exports.getUsers = (id, term) => {
     console.log("getUsers", term);

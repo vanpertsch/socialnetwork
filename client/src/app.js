@@ -5,6 +5,7 @@ import Profilepic from './components/profilepic';
 import Uploader from './components/uploalder';
 import Profile from './components/profile';
 import FindPeople from './components/findPeople';
+import OtherProfile from './components/otherProfile';
 
 export default class App extends Component {
     constructor(props) {
@@ -86,7 +87,7 @@ export default class App extends Component {
                         />
 
                         <div>
-                            <Link to="/user">Find People</Link>
+                            <Link to="/users">Find People</Link>
                         </div>
                         <div>
                             <Link to="/">My Profile</Link>
@@ -101,8 +102,11 @@ export default class App extends Component {
                         />
                     </header>
 
-                    <Route exact path="/user">
+                    <Route exact path="/users">
                         <FindPeople user_id={this.props.user_id} />
+                    </Route>
+                    <Route exact path="/otherprofile/:id">
+                        <OtherProfile />
                     </Route>
                     <Route exact path="/">
                         <Profile
@@ -114,9 +118,9 @@ export default class App extends Component {
                             toggleUploader={() => this.toggleUploader()}
                             updateProfileBio={this.updateProfileBio}
                         />
-
-                        {this.state.uploaderIsVisible && <Uploader email={this.state.email} updateProfileImg={this.updateProfileImg} toggleUploader={() => this.toggleUploader()} />}
                     </Route>
+
+                    {this.state.uploaderIsVisible && <Uploader email={this.state.email} updateProfileImg={this.updateProfileImg} toggleUploader={() => this.toggleUploader()} />}
                 </BrowserRouter>
             </>
         );

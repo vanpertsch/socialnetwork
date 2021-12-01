@@ -1,7 +1,7 @@
 import { Component } from 'react';
 
 
-export default class bioeditor extends Component {
+export default class BioEditor extends Component {
 
     constructor(props) {
         super(props);

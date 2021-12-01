@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function FindPeople({ user_id }) {
 
@@ -15,7 +16,7 @@ export default function FindPeople({ user_id }) {
                 console.log(data);
                 setUsers(data);
             }).catch((err) => {
-                console.log("err in did mount", err);
+                console.log("err in newuser", err);
             });
 
     }, []);
@@ -43,13 +44,16 @@ export default function FindPeople({ user_id }) {
 
             <div>
                 {users && users.map(user => (
+
+
                     <div key={user.id} >
-                        <img className="profilepic-lg" src={user.img_url} alt={`${user.first} ${user.last}`
-                        } />
-                        <p >{user.first} {user.last}</p>
+                        <Link to={`/otherprofile/${user.id}`}>
+                            <img className="profilepic-lg" src={user.img_url || '/panda.svg'} alt={`${user.first} ${user.last}`
+                            } />
+                            <p >{user.first} {user.last}</p>
 
+                        </Link>
                     </div>
-
                 ))}
             </div>
 
