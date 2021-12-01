@@ -38,7 +38,7 @@ test('Clicking either the "Add" or "Edit" button causes a textarea and a "Save" 
 
 
 
-test(' function that was passed as a prop to the component gets called', async () => {
+test('function that was passed as a prop to the component gets called', async () => {
 
 
     fetch.mockResolvedValueOnce({
@@ -65,11 +65,14 @@ test(' function that was passed as a prop to the component gets called', async (
 
 
     await waitFor(
-        () => expect(container.querySelector('button')).innerHTML("Edit bio")
+        () => expect(container.querySelector('button').innerHTML
+        ).toContain(
+            'Add your bio'
+        )
     );
 
     expect(
-        container.querySelector('div')
+        expect(updateProfileBioMock).toHaveBeenCalledTimes(1)
     ).toBe(
 
     );

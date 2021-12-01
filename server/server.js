@@ -18,6 +18,7 @@ const { authRouter } = require("./routers/auth-router.js");
 const { resetRouter } = require("./routers/reset.js");
 const { uploadRouter } = require("./routers/upload.js");
 const { usersRouter } = require("./routers/users.js");
+const { friendshipRouter } = require("./routers/friendship.js");
 
 const { sendEmail } = require("../helper/ses.js");
 
@@ -68,6 +69,7 @@ app.use(authRouter);
 app.use(resetRouter);
 app.use(uploadRouter);
 app.use(usersRouter);
+app.use(friendshipRouter);
 // app.use(signersRouter);
 
 // ---------------------------------End Middleware-------------------------≈

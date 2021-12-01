@@ -31,6 +31,24 @@ module.exports.addBio = (bio, email) => {
     const params = [bio, email];
     return db.query(q, params);
 };
+module.exports.addFriendRequest = (otherProfile_id, user_id) => {
+    const q = `INSERT INTO friendships (recipient_id, sender_id) VALUES($1,$2) RETURNING id`;
+    const params = [otherProfile_id, user_id];
+    return db.query(q, params);
+};
+module.exports.updateFriendRequest = (otherProfile_id, user_id) => {
+    const q = `UPDATE friendships SET accepted = true WHERE (recipient_id = $1 AND sender_id = $2) OR (recipient_id = $2 AND sender_id = $1) RETURNING accepted`;
+    const params = [otherProfile_id, user_id];
+    return db.query(q, params);
+};
+
+module.exports.removeFriendRequest = (otherProfile_id, user_id) => {
+    const q = `DELETE FROM friendships WHERE (recipient_id = $1 AND sender_id = $2) OR (recipient_id = $2 AND sender_id = $1)`;
+    const params = [otherProfile_id, user_id];
+    return db.query(q, params);
+};
+
+
 
 // ---------------------UPDATE------------------------------------------------
 module.exports.updatePassword = (email, password) => {
@@ -96,6 +114,14 @@ module.exports.getUsers = (id, term) => {
     console.log("getUsers", term);
     const q = `SELECT first, last, id, img_url FROM users WHERE first ILIKE $2 OR last ILIKE $2 OR CONCAT(first, ' ',last) ILIKE $2 AND id != $1 ORDER BY id DESC`;
     const params = [id, term + "%"];
+    return db.query(q, params);
+
+};
+
+module.exports.getFriendshipStatus = (otherProfile_id, user_id) => {
+    const q = `SELECT * FROM friendships WHERE (recipient_id = $1 AND sender_id = $2) OR (recipient_id = $2 AND sender_id = $1)`;
+
+    const params = [otherProfile_id, user_id];
     return db.query(q, params);
 
 };

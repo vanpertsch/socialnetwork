@@ -5,7 +5,7 @@ import useForm from '../../hooks/useForm.js';
 
 export default function Login() {
     const [values, handleChange] = useForm();
-    const [submit, error] = useAuthSubmit('/login', values);
+    const [submit, error] = useAuthSubmit('/login.json', values);
 
     return (
         <div>
