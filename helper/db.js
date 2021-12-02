@@ -32,12 +32,12 @@ module.exports.addBio = (bio, email) => {
     return db.query(q, params);
 };
 module.exports.addFriendRequest = (otherProfile_id, user_id) => {
-    const q = `INSERT INTO friendships (recipient_id, sender_id) VALUES($1,$2) RETURNING id`;
+    const q = `INSERT INTO friendships (recipient_id, sender_id) VALUES($1,$2) RETURNING *`;
     const params = [otherProfile_id, user_id];
     return db.query(q, params);
 };
 module.exports.updateFriendRequest = (otherProfile_id, user_id) => {
-    const q = `UPDATE friendships SET accepted = true WHERE (recipient_id = $1 AND sender_id = $2) OR (recipient_id = $2 AND sender_id = $1) RETURNING accepted`;
+    const q = `UPDATE friendships SET accepted = true WHERE (recipient_id = $1 AND sender_id = $2) OR (recipient_id = $2 AND sender_id = $1) RETURNING *`;
     const params = [otherProfile_id, user_id];
     return db.query(q, params);
 };

@@ -11,18 +11,7 @@ export default function FriendButton(props) {
             .then(data => {
                 console.log("friendshipstat", data);
 
-                if (data && data.sender_id == props.otherProfileId) {
-                    setButtonText("Accept friend request");
-                }
-                if (data && data.sender_id != props.otherProfileId) {
-                    setButtonText("Cancel friend request");
-                }
-                if (data && data.accepted) {
-                    setButtonText("unfriend");
-                }
-                if (data.message == "no request") {
-                    setButtonText("send friend request");
-                }
+                evalFriendship(data, props.otherProfileId);
             }).catch((err) => {
                 console.log("err in fetch freindshipstat", err);
             });
@@ -43,9 +32,28 @@ export default function FriendButton(props) {
         }).then(
             response => response.json()
         ).then(
-            data => console.log("fetch friendship", data)
+            data => {
+                console.log("fetch friendship", data);
+                evalFriendship(data, props.otherProfileId);
+            }
+
         );
 
+    }
+
+    const evalFriendship = (data, id) => {
+        if (data && data.accepted) {
+            setButtonText("unfriend");
+        }
+        if (data && data.sender_id == id) {
+            setButtonText("Accept friend request");
+        }
+        if (data && data.sender_id != id) {
+            setButtonText("Cancel friend request");
+        }
+        if (data.message == "no request") {
+            setButtonText("send friend request");
+        }
     }
 
     return (
