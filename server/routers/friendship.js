@@ -2,13 +2,17 @@ const express = require("express");
 const db = require("../../helper/db.js");
 const router = express.Router();
 
+const { BUTTON } = require("../../helper/constants.js");
+console.log("buttonsend", BUTTON.SEND);
+
+
 
 router.post("/friendship", (req, res) => {
     const { otherProfile_id, buttonText } = req.body;
     const user_id = req.session.userId;
     console.log("router.post friendship", otherProfile_id, buttonText, user_id);
 
-    if (buttonText == "send friend request") {
+    if (buttonText == `${BUTTON.SEND}`) {
 
         db.addFriendRequest(otherProfile_id, user_id,)
             .then((result) => {
@@ -25,7 +29,7 @@ router.post("/friendship", (req, res) => {
             });
     }
 
-    if (buttonText == "Accept friend request") {
+    if (buttonText == `${BUTTON.ACCEPT}`) {
 
         db.updateFriendRequest(otherProfile_id, user_id,)
             .then((result) => {
@@ -43,7 +47,7 @@ router.post("/friendship", (req, res) => {
     }
 
 
-    if (buttonText == "unfriend") {
+    if (buttonText == `${BUTTON.UNFRIEND}`) {
         db.removeFriendRequest(otherProfile_id, user_id)
             .then(() => {
                 return res.json({ message: "no request" });
@@ -60,7 +64,23 @@ router.post("/friendship", (req, res) => {
     }
 
 
-    if (buttonText == "Cancel friend request") {
+    if (buttonText == `${BUTTON.CANCEL}`) {
+
+        db.removeFriendRequest(otherProfile_id, user_id)
+            .then(() => {
+                return res.json({ message: "no request" });
+            })
+            .catch((err) => {
+                console.log("err in addFriendRequest", err);
+                return res.status(err.status || 500).send({
+                    error: {
+                        status: err.status || 500,
+                        // message: err.message || "Internal Server Error",
+                    },
+                });
+            });
+    }
+    if (buttonText == `${BUTTON.REJECT}`) {
 
         db.removeFriendRequest(otherProfile_id, user_id)
             .then(() => {
@@ -95,6 +115,26 @@ router.get('/friendshipstat/:id', (req, res) => {
         } else {
             return res.json(result.rows[0]);
         }
+    }).catch((err) => {
+        console.log(err);
+        return res.status(err.status || 500).send({
+            error: {
+                status: err.status || 500,
+                // message: err.message || "Internal Server Error",
+            },
+        });
+    });
+});
+router.get('/friends/friends-and-wannabes', (req, res) => {
+
+    const otherProfile_id = req.params.id;
+    const user_id = req.session.userId;
+
+    db.getFriendsAndWannabes(user_id).then((result) => {
+        console.log("rows friends-and-wannabes", result.rows);
+
+        return res.json(result.rows);
+
     }).catch((err) => {
         console.log(err);
         return res.status(err.status || 500).send({

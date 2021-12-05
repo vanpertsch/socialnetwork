@@ -91,7 +91,15 @@ test('request was made, for recipient the button shows: Accept friend request ',
 
 test('request was made && accepted, renders button unfriend,', async () => {
 
-
+    fetch.mockResolvedValueOnce({
+        async json() {
+            return {
+                data: {
+                    id: 6, sender_id: 12, recipient_id: 100, accepted: false
+                }
+            };
+        }
+    });
 
     const { container } = render(<FriendButton otherProfileId="12" />);
 
@@ -118,7 +126,3 @@ test('request was made && accepted, renders button unfriend,', async () => {
     );
 
 });
-// if (data && data.sender_id == props.otherProfileId) {
-//     setButtonText("Accept friend request");
-
-// }

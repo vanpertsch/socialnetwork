@@ -10,6 +10,7 @@ export default function OtherProfile() {
     const { id } = useParams();
     const history = useHistory();
 
+
     console.log("history:", history);
     console.log("id:", id);
     console.log("user:", user);
@@ -42,7 +43,7 @@ export default function OtherProfile() {
             {error && <div> Sorry. No user found</div>}
             {!error && user &&
                 <div key={user.id}>
-                    <img className="profilepic-lg" src={user.img_url} alt={`${user.first} ${user.last}`} />
+                    <img className="profilepic-lg" src={user.img_url || '/panda.svg'} alt={`${user.first} ${user.last}`} />
                     <h1>{user.first} {user.last}</h1>
                     <p>{user.bio}</p>
                     {!error && < FriendButton otherProfileId={user.id} />}

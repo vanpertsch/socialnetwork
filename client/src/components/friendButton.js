@@ -1,8 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
+import { BUTTON } from "../../../helper/constants.js";
+
+console.log("button in friendbutton", BUTTON)
+
 
 export default function FriendButton(props) {
 
-    const [buttonText, setButtonText] = useState("send friend request");
+    const [buttonText, setButtonText] = useState(BUTTON.SEND);
 
     useEffect(() => {
 
@@ -43,16 +47,16 @@ export default function FriendButton(props) {
 
     const evalFriendship = (data, id) => {
         if (data && data.accepted) {
-            setButtonText("unfriend");
+            setButtonText(BUTTON.UNFRIEND);
         }
         if (data && data.sender_id == id) {
-            setButtonText("Accept friend request");
+            setButtonText(BUTTON.ACCEPT);
         }
         if (data && data.sender_id != id) {
-            setButtonText("Cancel friend request");
+            setButtonText(BUTTON.CANCEL);
         }
         if (data.message == "no request") {
-            setButtonText("send friend request");
+            setButtonText(BUTTON.SEND);
         }
     }
 

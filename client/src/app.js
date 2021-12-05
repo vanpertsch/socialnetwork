@@ -6,6 +6,7 @@ import Uploader from './components/uploalder';
 import Profile from './components/profile';
 import FindPeople from './components/findPeople';
 import OtherProfile from './components/otherProfile';
+import Friends from './components/friends';
 
 export default class App extends Component {
     constructor(props) {
@@ -92,6 +93,9 @@ export default class App extends Component {
                         <div>
                             <Link to="/">My Profile</Link>
                         </div>
+                        <div>
+                            <Link to="/friends">Friends</Link>
+                        </div>
 
                         <Profilepic
                             first={this.state.first}
@@ -104,6 +108,10 @@ export default class App extends Component {
 
                     <Route exact path="/users">
                         <FindPeople user_id={this.props.user_id} />
+                    </Route>
+
+                    <Route exact path="/friends">
+                        <Friends user_id={this.props.user_id} />
                     </Route>
                     <Route exact path="/otherprofile/:id">
                         <OtherProfile />
