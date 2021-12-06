@@ -93,11 +93,11 @@ router.get("/user/profile/:id", (req, res) => {
             });
         });
 });
-// // logout route to delete your cookies
-// router.get("/logout", (req, res) => {
-//     req.session = null;
-//     res.redirect("/");
-// });
+// logout route to delete your cookies
+router.get("/logout", (req, res) => {
+    req.session = null;
+    res.redirect("/");
+});
 
 module.exports.authRouter = router;
 

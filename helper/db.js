@@ -111,7 +111,7 @@ module.exports.getOtherProfile = (id) => {
 
 
 module.exports.getNewestUsers = (id) => {
-    const q = `SELECT first, last, id, img_url FROM users WHERE users.id <> $1 ORDER BY id DESC LIMIT 3`;
+    const q = `SELECT first, last, id, img_url FROM users WHERE users.id <> $1 ORDER BY id DESC LIMIT 4`;
     const params = [id];
     return db.query(q, params);
 

@@ -1,5 +1,9 @@
 import { Component } from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Link, NavLink } from 'react-router-dom';
+
+import { CSSTransition } from 'react-transition-group';
+import { Container, Navbar, Nav } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Profilepic from './components/profilepic';
 import Uploader from './components/uploalder';
@@ -43,19 +47,6 @@ export default class App extends Component {
             });
         };
 
-        // fetch(`/ user / profile / ${ this.props.user_id } `)
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         this.setState({
-        //             email: data.email,
-        //             first: data.first,
-        //             last: data.last,
-        //             img_url: data.img_url
-        //         });
-        //     }).catch((err) => {
-        //         console.log("err in did mount", err);
-        //     });
-
     }
 
     updateProfileImg(val) {
@@ -75,60 +66,110 @@ export default class App extends Component {
         });
     }
 
+
     render() {
         console.log("bio App", this.state.bio);
         return (
             <>
                 <BrowserRouter>
-                    <header>
-                        <img
-                            className='logo'
-                            src="/logo.png"
-                            alt="commonground logo"
-                        />
+                    <Navbar bg="light" expand="lg">
+                        <Container>
+                            <Navbar.Brand>
+                                <Nav.Link
+                                    key="/"
+                                    to="/"
+                                    as={NavLink}
+                                    activeclassname="active"
+                                    exact
 
-                        <div>
-                            <Link to="/users">Find People</Link>
+                                >
+                                    <img
+                                        className='logo rotate'
+                                        src="/network.svg"
+                                        alt="commonground logo"
+                                    />
+                                </Nav.Link>
+                            </Navbar.Brand>
+                            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                            <Navbar.Collapse id="responsive-navbar-nav" >
+                                <Nav className="ml-auto" >
+                                    <Nav.Link
+                                        key="/users"
+                                        as={NavLink}
+                                        to="/users"
+                                        activeclassname="active"
+
+                                    >
+                                        Find People
+                                    </Nav.Link>
+
+                                    <Nav.Link
+                                        key="/friend"
+                                        as={NavLink}
+                                        to="/friends"
+                                        activeClassName="active"
+
+                                    >
+                                        Friends
+                                    </Nav.Link>
+                                    <Nav.Link
+                                        key="/myprofile"
+                                        as={NavLink}
+                                        to="/"
+                                        activeclassname="active"
+                                        exact
+
+                                    >
+                                        My Profile
+                                    </Nav.Link>
+                                    <Nav.Link
+                                        key="/logout"
+                                        as={NavLink}
+                                        to="/logout"
+                                        activeclassname="active"
+                                        exact
+
+                                    >
+                                        Logout
+                                    </Nav.Link>
+                                </Nav>
+                                <Profilepic
+                                    first={this.state.first}
+                                    last={this.state.last}
+                                    imageUrl={this.state.img_url}
+                                    toggleUploader={() => this.toggleUploader()}
+                                    imgSize="profilepic-nav"
+                                />
+                            </Navbar.Collapse>
+                        </Container>
+                    </Navbar>
+                    <Container>
+                        <div id="app">
+                            <Route exact path="/users">
+                                <FindPeople user_id={this.props.user_id} />
+                            </Route>
+
+                            <Route exact path="/friends">
+                                <Friends user_id={this.props.user_id} />
+                            </Route>
+                            <Route exact path="/otherprofile/:id">
+                                <OtherProfile />
+                            </Route>
+                            <Route exact path="/">
+                                <Profile
+                                    first={this.state.first}
+                                    last={this.state.last}
+                                    imageUrl={this.state.img_url}
+                                    bio={this.state.bio}
+                                    email={this.state.email}
+                                    toggleUploader={() => this.toggleUploader()}
+                                    updateProfileBio={this.updateProfileBio}
+                                />
+                            </Route>
+
+                            {this.state.uploaderIsVisible && <Uploader show={this.state.uploaderIsVisible} email={this.state.email} updateProfileImg={this.updateProfileImg} toggleUploader={() => this.toggleUploader()} />}
                         </div>
-                        <div>
-                            <Link to="/">My Profile</Link>
-                        </div>
-                        <div>
-                            <Link to="/friends">Friends</Link>
-                        </div>
-
-                        <Profilepic
-                            first={this.state.first}
-                            last={this.state.last}
-                            imageUrl={this.state.img_url}
-                            toggleUploader={() => this.toggleUploader()}
-                            imgSize="profilepic-nav"
-                        />
-                    </header>
-
-                    <Route exact path="/users">
-                        <FindPeople user_id={this.props.user_id} />
-                    </Route>
-
-                    <Route exact path="/friends">
-                        <Friends user_id={this.props.user_id} />
-                    </Route>
-                    <Route exact path="/otherprofile/:id">
-                        <OtherProfile />
-                    </Route>
-                    <Route exact path="/">
-                        <Profile
-                            first={this.state.first}
-                            last={this.state.last}
-                            imageUrl={this.state.img_url}
-                            bio={this.state.bio}
-                            email={this.state.email}
-                            toggleUploader={() => this.toggleUploader()}
-                            updateProfileBio={this.updateProfileBio}
-                        />
-                    </Route>
-
-                    {this.state.uploaderIsVisible && <Uploader email={this.state.email} updateProfileImg={this.updateProfileImg} toggleUploader={() => this.toggleUploader()} />}
+                    </Container>
                 </BrowserRouter>
             </>
         );
