@@ -36,6 +36,12 @@ module.exports.addFriendRequest = (otherProfile_id, user_id) => {
     const params = [otherProfile_id, user_id];
     return db.query(q, params);
 };
+module.exports.addMessage = (msg, user_id) => {
+    const q = `INSERT INTO  chat_messages (message, user_id) VALUES($1,$2) RETURNING *`;
+    const params = [msg, user_id];
+    return db.query(q, params);
+};
+
 module.exports.updateFriendRequest = (otherProfile_id, user_id) => {
     const q = `UPDATE friendships SET accepted = true WHERE (recipient_id = $1 AND sender_id = $2) OR (recipient_id = $2 AND sender_id = $1) RETURNING *`;
     const params = [otherProfile_id, user_id];
@@ -114,9 +120,22 @@ module.exports.getNewestUsers = (id) => {
     const q = `SELECT first, last, id, img_url FROM users WHERE users.id <> $1 ORDER BY id DESC LIMIT 4`;
     const params = [id];
     return db.query(q, params);
-
 };
 
+
+module.exports.getLastTenChatMessages = () => {
+    const q = `SELECT first, last, img_url, chat_messages.created_at, chat_messages.message, users.id AS userId, chat_messages.id AS message_id FROM chat_messages JOIN users ON users.id = chat_messages.user_id ORDER BY chat_messages.id DESC LIMIT 10`;
+
+    return db.query(q);
+
+};
+module.exports.getLastMessage = (user_id) => {
+    const q = `SELECT first, last, img_url, chat_messages.created_at, chat_messages.message, users.id AS userId, chat_messages.id AS message_id FROM chat_messages JOIN users ON users.id = chat_messages.user_id WHERE chat_messages.id = $1 `;
+
+    const params = [user_id];
+    return db.query(q, params);
+
+};
 
 
 module.exports.getUsers = (id, term) => {

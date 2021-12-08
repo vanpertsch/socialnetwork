@@ -3,12 +3,17 @@ const ACTIONS = {
     RECEIVE: 'friends/receiveFriendsAndWannabes',
     UNFRIEND: 'friends/unfriend',
     ACCEPT: 'friends/acceptFriendRequest',
-    REJECT: 'friends/rejectFriendRequest'
+    REJECT: 'friends/rejectFriendRequest',
+    RECEIVEASYNC: 'friends/receiveFriends',
 };
 
 export default function friendsReducer(friendsAndWannabes = null, action) {
 
-    if (action.type == ACTIONS.RECEIVE) {
+    // if (action.type == ACTIONS.RECEIVE) {
+
+    //     friendsAndWannabes = action.payload.friendsAndWannabes;
+    // }
+    if (action.type == ACTIONS.RECEIVEASYNC) {
 
         friendsAndWannabes = action.payload.friendsAndWannabes;
     }
@@ -27,8 +32,6 @@ export default function friendsReducer(friendsAndWannabes = null, action) {
 
     if (action.type == ACTIONS.ACCEPT) {
 
-        // The function you pass to map should return the object it is passed as its first argument unless that object's id matches the id in the action's payload.If that's the case, you want to clone the object, set the clone's accepted property to true, and finally return the clone.
-
         friendsAndWannabes = friendsAndWannabes.map(
             char => {
                 console.log("faw accept", char.id, action.payload.id);
@@ -43,6 +46,9 @@ export default function friendsReducer(friendsAndWannabes = null, action) {
             }
         )
     }
+
+
+
     return friendsAndWannabes;
 }
 
@@ -70,5 +76,17 @@ export function acceptFriendRequest(id) {
     return {
         type: ACTIONS.ACCEPT,
         payload: { id }
+    };
+}
+
+export function receiveUsers() {
+    return async (dispatch) => {
+        const data = await fetch('/friends/friends-and-wannabes').then(response => response.json());
+        dispatch({
+            type: ACTIONS.RECEIVEASYNC,
+            payload: {
+                friendsAndWannabes: data,
+            },
+        });
     };
 }

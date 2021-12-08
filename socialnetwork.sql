@@ -29,3 +29,11 @@ CREATE TABLE friendships(
 
 
  ALTER TABLE users ADD COLUMN bio VARCHAR;
+
+
+  CREATE TABLE chat_messages (
+      id SERIAL PRIMARY KEY,
+      user_id INT NOT NULL REFERENCES users(id) ,
+      message TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );

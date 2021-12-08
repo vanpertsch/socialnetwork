@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BUTTON } from "../../../helper/constants.js";
-
-console.log("button in friendbutton", BUTTON)
+import { Button } from 'react-bootstrap';
 
 
 export default function FriendButton(props) {
@@ -62,7 +61,7 @@ export default function FriendButton(props) {
 
     return (
         <div>
-            <button onClick={handleChange}>{buttonText}</button>
+            <Button variant="primary" onClick={handleChange}>{buttonText}</Button>
         </div>
     )
 }

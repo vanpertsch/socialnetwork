@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-
+import { Row, Col, Card, Form, FormControl, Button } from 'react-bootstrap';
 export default class BioEditor extends Component {
 
     constructor(props) {
@@ -57,17 +57,39 @@ export default class BioEditor extends Component {
 
         return (
             <>
-                <div>
-                    {!this.state.editorIsVisible && <p>{this.props.bio}</p>}
-                </div>
+                {/* <div className="dist"></div> */}
+                <Row>
+                    <Col md={12}>
+                        {!this.state.editorIsVisible &&
+                            < div className="container__bio">
+                                <p>{this.props.bio}</p>
+                            </div>
+                        }
+                        {this.state.editorIsVisible &&
+                            <div className="bioeditor">
 
-                <div className="bioeditor">
-                    {this.state.editorIsVisible && <textarea rows="5" cols="33" onChange={(e) => this.setDraftBio(e)} defaultValue={this.props.bio}></textarea>}
-                    {!this.state.editorIsVisible && this.props.bio && <button onClick={() => this.toggleArea()}>Edit bio</button>}
-                    {!this.state.editorIsVisible && !this.props.bio && <button onClick={() => this.toggleArea()}>Add your bio</button>}
+                                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                                    <Form.Control as="textarea" rows={5} cols={33} onChange={(e) => this.setDraftBio(e)} defaultValue={this.props.bio} />
+                                </Form.Group>
 
-                    {this.state.editorIsVisible && <button onClick={() => this.upload()}>Save</button>}
-                </div>
+
+                            </div>
+                        }
+
+                    </Col>
+                    <div className="dist"></div>
+                    <Col md={12}>
+
+                        {!this.state.editorIsVisible && this.props.bio && <Button variant="primary" onClick={() => this.toggleArea()}>Edit bio</Button>}
+
+                        {!this.state.editorIsVisible && !this.props.bio && <Button variant="primary" onClick={() => this.toggleArea()}>Add your bio</Button>}
+
+                        {this.state.editorIsVisible && <Button variant="primary" onClick={() => this.upload()}>Save</Button>}
+                    </Col>
+                </Row>
+
+
+
             </>
         );
     }

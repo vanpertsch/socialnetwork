@@ -1,9 +1,9 @@
 import { Component } from 'react';
-import { BrowserRouter, Route, Link, NavLink } from 'react-router-dom';
+import { BrowserRouter, Route, Link, NavLink, Redirect } from 'react-router-dom';
 
 import { CSSTransition } from 'react-transition-group';
 import { Container, Navbar, Nav } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import Profilepic from './components/profilepic';
 import Uploader from './components/uploalder';
@@ -11,6 +11,7 @@ import Profile from './components/profile';
 import FindPeople from './components/findPeople';
 import OtherProfile from './components/otherProfile';
 import Friends from './components/friends';
+import Chat from './components/chat';
 
 export default class App extends Component {
     constructor(props) {
@@ -123,15 +124,18 @@ export default class App extends Component {
                                         My Profile
                                     </Nav.Link>
                                     <Nav.Link
-                                        key="/logout"
+                                        key="/chat"
                                         as={NavLink}
-                                        to="/logout"
+                                        to="/chat"
                                         activeclassname="active"
                                         exact
 
                                     >
-                                        Logout
+                                        Chat
                                     </Nav.Link>
+
+                                    <a className="nav-link" href="/logout">Logout</a>
+
                                 </Nav>
                                 <Profilepic
                                     first={this.state.first}
@@ -155,6 +159,10 @@ export default class App extends Component {
                             <Route exact path="/otherprofile/:id">
                                 <OtherProfile />
                             </Route>
+                            <Route exact path="/chat">
+                                <Chat user_id={this.props.user_id} />
+                            </Route>
+
                             <Route exact path="/">
                                 <Profile
                                     first={this.state.first}

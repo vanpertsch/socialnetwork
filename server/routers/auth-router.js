@@ -13,6 +13,7 @@ router.get('/user/id.json', function (req, res) {
     });
 });
 
+
 router.post("/registration.json", requireNotLoggedIn, (req, res) => {
     const { first, last, email, password } = req.body;
     hash(password)
