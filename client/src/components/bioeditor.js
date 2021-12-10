@@ -1,32 +1,39 @@
-import { Component } from 'react';
+import { useState } from 'react';
+
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfileBio } from "./../redux/user/slice.js";
+
 
 import { Row, Col, Card, Form, FormControl, Button } from 'react-bootstrap';
-export default class BioEditor extends Component {
 
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            editorIsVisible: false,
-            draftBio: ''
-        };
+export default function BioEditor(props) {
 
+    const user = useSelector(state => state?.user);
+
+    const dispatch = useDispatch();
+
+    const [editorIsVisible, setEditorIsVisible] = useState(false);
+    const [draftBio, setDraftBio] = useState("");
+    const [error, setError] = useState(false);
+
+
+
+
+    function toggleArea() {
+        setEditorIsVisible(!editorIsVisible);
     }
 
-    toggleArea() {
-        console.log("this.props.bio", this.props.bio);
-        this.setState({
-            editorIsVisible: !this.state.editorIsVisible
-        });
-    }
 
+    // function changeDraftBio(e) {
+    //     setDraftBio(e.target.value);
+    // }
 
-    setDraftBio(e) {
-        console.log(e.target.value);
-        this.setState({ draftBio: e.target.value });
-    }
+    const changeDraftBio = (e) => {
+        return setDraftBio(e.target.value);
+    };
 
-    async upload() {
+    async function upload() {
 
         try {
             const res = await fetch('/upload/bio', {
@@ -34,63 +41,54 @@ export default class BioEditor extends Component {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ bio: this.state.draftBio, email: this.props.email })
+                body: JSON.stringify({ bio: draftBio, email: user.email })
             });
             const data = await (res.json());
             console.log("updateProfileBio(data.bio)", data.bio);
-            this.setState({
-                draftBio: data.bio
-            });
-            this.props.updateProfileBio(data.bio);
-            this.toggleArea();
+
+            setDraftBio(data.bio);
+
+            dispatch(updateProfileBio(data.bio));
+            toggleArea();
 
         } catch (err) {
             console.log("err in bio upload", err);
-            this.setState({
-                error: true
-            });
-        };
+            setError(true);
+
+        }
 
     }
 
-    render() {
+    return (
+        <>
+            <Row>
+                <Col md={12}>
+                    {!editorIsVisible &&
+                        < div className="container__bio">
+                            <p>{user.bio}</p>
+                        </div>
+                    }
+                    {editorIsVisible &&
+                        <div className="bioeditor">
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                                <Form.Control as="textarea" rows={5} cols={33} onChange={(e) => changeDraftBio(e)} defaultValue={user.bio} />
+                            </Form.Group>
+                        </div>
+                    }
 
-        return (
-            <>
-                {/* <div className="dist"></div> */}
-                <Row>
-                    <Col md={12}>
-                        {!this.state.editorIsVisible &&
-                            < div className="container__bio">
-                                <p>{this.props.bio}</p>
-                            </div>
-                        }
-                        {this.state.editorIsVisible &&
-                            <div className="bioeditor">
+                </Col>
+                <div className="dist"></div>
+                <Col md={12}>
 
-                                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                                    <Form.Control as="textarea" rows={5} cols={33} onChange={(e) => this.setDraftBio(e)} defaultValue={this.props.bio} />
-                                </Form.Group>
+                    {!editorIsVisible && user.bio && <Button variant="primary" onClick={() => toggleArea()}>Edit bio</Button>}
 
+                    {!editorIsVisible && !user.bio && <Button variant="primary" onClick={() => toggleArea()}>Add your bio</Button>}
 
-                            </div>
-                        }
+                    {editorIsVisible && <Button variant="primary" onClick={() => upload()}>Save</Button>}
+                </Col>
+            </Row>
 
-                    </Col>
-                    <div className="dist"></div>
-                    <Col md={12}>
+        </>
+    );
 
-                        {!this.state.editorIsVisible && this.props.bio && <Button variant="primary" onClick={() => this.toggleArea()}>Edit bio</Button>}
-
-                        {!this.state.editorIsVisible && !this.props.bio && <Button variant="primary" onClick={() => this.toggleArea()}>Add your bio</Button>}
-
-                        {this.state.editorIsVisible && <Button variant="primary" onClick={() => this.upload()}>Save</Button>}
-                    </Col>
-                </Row>
-
-
-
-            </>
-        );
-    }
 }

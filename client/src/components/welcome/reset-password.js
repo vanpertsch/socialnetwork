@@ -1,5 +1,8 @@
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
+
+import { Form, Button, Alert, Row, Col, Stack } from 'react-bootstrap';
+
 export default class ResetPassword extends Component {
 
     constructor(props) {
@@ -75,32 +78,55 @@ export default class ResetPassword extends Component {
     }
     render() {
         return (
-            <div>
-                <h1>Reset Password</h1>
-                {this.state.error && <div className='error'>Something went wrong. Please try again</div>}
+            <div className='section'>
+
+                {this.state.error && <Alert variant="error">Something went wrong. Please try again</Alert>}
 
                 {this.state.stage == 1 &&
-                    <div>
 
-                        <p>Please enter the email address with wich you registered. We will send you an email with further information</p>
-                        <input onChange={(e) => this.handleChange(e)} name="email" />
-                        <button onClick={() => this.submitStage1()}>submit</button>
-                    </div>
+                    <Row>
+
+                        <Col md={6}>
+                            <p>Please enter the email address with wich you registered. We will send you an email with further information</p>
+
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Label>Email address</Form.Label>
+                                <Form.Control type="email" placeholder="Enter email" onChange={(e) => this.handleChange(e)} name="email" />
+                            </Form.Group>
+                            <Button onClick={() => this.submitStage1()}>submit</Button>
+                        </Col>
+                    </Row>
+
                 }
                 {this.state.stage == 2 &&
-                    <div>
-                        <p>Please enter the code you recieved per mail</p>
-                        <input onChange={(e) => this.handleChange(e)} name="code" />
-                        <p>Please enter a new password</p>
-                        <input onChange={(e) => this.handleChange(e)} name="password" />
-                        <button onClick={() => this.submitStage2()}>submit</button>
-                    </div>
+
+                    <Row>
+
+                        <Col md={6}>
+                            <p>Please enter the code you recieved per mail</p>
+
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Label>Code</Form.Label>
+                                <Form.Control type="text" placeholder="Enter code" onChange={(e) => this.handleChange(e)} name="code" />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control type="password" placeholder="Password" onChange={(e) => this.handleChange(e)} name="password" />
+                            </Form.Group>
+                            <Button onClick={() => this.submitStage2()}>submit</Button>
+                        </Col>
+                    </Row>
+
                 }
                 {this.state.stage == 3 &&
-                    <div>
-                        <p>PSuccess!</p>
-                        <Link to="/login">Click here to Log in!</Link>
-                    </div>
+
+                    <Row>
+                        <Col md={6}>
+                            <h3>Success!</h3>
+                            <Link to="/login"><Button variant="primary">Click here to Log in!</Button></Link>
+                        </Col>
+                    </Row>
+
                 }
 
             </div>

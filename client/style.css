@@ -13,7 +13,8 @@ header {
 }
 
 a {
-    /* text-decoration: none !important; */
+    text-decoration: none !important;
+    color: black !important;
 }
 
 .section {
@@ -35,8 +36,9 @@ a {
 }
 
 .logo {
-    width: 80px;
+    width: 60px;
     height: auto;
+    margin: 0 0.25rem;
 }
 .profilepic-nav {
     border: 1px solid black;
@@ -47,6 +49,8 @@ a {
     background-color: white;
     object-fit: cover;
     object-position: center;
+    margin-left: 1rem;
+    cursor: pointer;
 }
 .profilepic-card {
     border: 1px solid black;
@@ -66,6 +70,7 @@ a {
     height: 400px;
     object-fit: cover;
     object-position: center;
+    cursor: pointer;
 }
 
 .uploader {
@@ -112,9 +117,6 @@ a {
     height: 88vh;
 }
 
-.svg {
-    fill: red;
-}
 .ml-auto {
     margin-left: auto;
 }
@@ -132,8 +134,9 @@ a {
 }
 .container__bio {
     min-height: 300px;
-    background-color: rgb(231, 231, 231);
+    background-color: rgb(245, 245, 245);
     border-radius: 3px;
+    border: 1px dotted black;
     padding: 12px;
 }
 .margin-top-3 {
@@ -150,15 +153,15 @@ a {
 }
 
 .btn-primary {
-    background-color: lightpink !important;
-    border: 1px solid lightpink !important;
+    background-color: rgb(61, 18, 180) !important;
+    border: 1px solid rgb(61, 18, 180) !important;
 }
 .btn-primary:hover {
-    background-color: rgb(235, 109, 128) !important;
+    background-color: rgb(33, 4, 114) !important;
 }
 
 .chat-container {
-    width: 50vw;
+    width: 100%;
     height: 60vh;
     overflow: scroll;
     background-color: black;
@@ -195,6 +198,19 @@ a {
     font-size: 0.8rem;
     color: lightgrey;
 }
+.message__meta .darkgray {
+    color: rgb(148, 147, 147);
+}
 .message__meta.right {
     text-align: right;
 }
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 2rem !important;
+    padding-left: 2rem !important;
+}
+
+/* footer {
+    bottom: 0;
+    height: 5vh;
+} */

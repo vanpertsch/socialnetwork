@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { receiveFriendsAndWannabes, receiveUsers, unfriend, acceptFriendRequest } from "./../redux/friends/slice.js";
-import WannabeButton from './wannabeButton.js';
-import { Row, Col, Card, Button, Alert } from 'react-bootstrap';
+
+import { Row, Col, Card, Button, Alert, Stack } from 'react-bootstrap';
 
 import { BUTTON } from "../../../helper/constants.js";
 
@@ -128,41 +128,43 @@ text-decoration: none;
 
                                             </Card.Body>
                                             <Card.Footer>
-                                                <Button onClick={
-                                                    async e => {
-                                                        const resp = await fetch('/friendship', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json'
-                                                            },
-                                                            body: JSON.stringify({
-                                                                buttonText: `${BUTTON.ACCEPT}`,
-                                                                otherProfile_id: wannabe.id
-                                                            })
-                                                        }).then(res => res.json());
-                                                        if (resp) {
-                                                            dispatch(acceptFriendRequest(wannabe.id));
+                                                <Stack direction="horizontal" gap={1}>
+                                                    <Button onClick={
+                                                        async e => {
+                                                            const resp = await fetch('/friendship', {
+                                                                method: 'POST',
+                                                                headers: {
+                                                                    'Content-Type': 'application/json'
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    buttonText: `${BUTTON.ACCEPT}`,
+                                                                    otherProfile_id: wannabe.id
+                                                                })
+                                                            }).then(res => res.json());
+                                                            if (resp) {
+                                                                dispatch(acceptFriendRequest(wannabe.id));
+                                                            }
                                                         }
-                                                    }
-                                                }>{BUTTON.ACCEPT}</Button>
-                                                <Button onClick={
-                                                    async e => {
-                                                        const resp = await fetch('/friendship', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json'
-                                                            },
-                                                            body: JSON.stringify({
-                                                                buttonText: `${BUTTON.REJECT}`,
-                                                                otherProfile_id: wannabe.id
-                                                            })
-                                                        }).then(res => res.json());
+                                                    }>{BUTTON.ACCEPT}</Button>
+                                                    <Button className="ml-auto" onClick={
+                                                        async e => {
+                                                            const resp = await fetch('/friendship', {
+                                                                method: 'POST',
+                                                                headers: {
+                                                                    'Content-Type': 'application/json'
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    buttonText: `${BUTTON.REJECT}`,
+                                                                    otherProfile_id: wannabe.id
+                                                                })
+                                                            }).then(res => res.json());
 
-                                                        if (resp) {
-                                                            dispatch(unfriend(wannabe.id));
+                                                            if (resp) {
+                                                                dispatch(unfriend(wannabe.id));
+                                                            }
                                                         }
-                                                    }
-                                                }>{BUTTON.REJECT}</Button>
+                                                    }>{BUTTON.REJECT}</Button>
+                                                </Stack>
                                             </Card.Footer>
                                         </Card>
 

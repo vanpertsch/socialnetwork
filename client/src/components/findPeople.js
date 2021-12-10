@@ -2,37 +2,25 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Card, Form, FormControl } from 'react-bootstrap';
 
-export default function FindPeople({ user_id }) {
+import { useDispatch, useSelector } from "react-redux";
+import { updateUsers, receiveUsers } from "./../redux/users/slice.js";
 
-    const [users, setUsers] = useState();
+
+export default function FindPeople() {
+    const dispatch = useDispatch();
     const [term, setTerm] = useState("");
 
-
+    const users = useSelector(state => state?.users);
 
     useEffect(() => {
 
-        fetch(`/newusers/id.json`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setUsers(data);
-            }).catch((err) => {
-                console.log("err in newuser", err);
-            });
-
+        dispatch(receiveUsers());
     }, []);
 
     useEffect(() => {
-        console.log(term);
-
-        fetch(`/users/${term}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setUsers(data);
-            }).catch((err) => {
-                console.log("err in fetch(`/users/${term}`)", err);
-            });
+        if (term) {
+            dispatch(updateUsers(term));
+        }
 
     }, [term]);
 
@@ -62,7 +50,7 @@ export default function FindPeople({ user_id }) {
             <div className="">
                 <Row>
                     {users && users.map(user => (
-                        <Col xs={6} md={3} key={user.id}>
+                        <Col md={3} key={user.id}>
                             <Card>
                                 <Link to={`/otherprofile/${user.id}`}>
                                     <Card.Img variant="top" className="profilepic-card" src={user.img_url || '/panda.svg'} alt={`${user.first} ${user.last}`} />

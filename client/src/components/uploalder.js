@@ -1,44 +1,48 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
+
+import { useDispatch, useSelector } from "react-redux";
+import { removeProfileImg, updateProfileImg } from "./../redux/user/slice.js";
+
 import { Modal, Button, Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
 
-export default class Uploader extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            file: null,
-            img_url: '',
-            errorFileSize: false,
-            errorEmptyFile: false,
-            waitForImage: false
-        };
-    }
+export default function Uploader(props) {
+    const dispatch = useDispatch();
 
-    setFile(e) {
+    const [file, setFile] = useState(null);
+    const [errorFileSize, setErrorFileSize] = useState(false);
+    const [errorEmptyFile, setErrorEmptyFile] = useState(false);
+    const [waitForImage, setWaitForImage] = useState(false);
+
+    const user = useSelector(state => state?.user);
+
+
+    function changeFile(e) {
         console.log(e.target.files[0]);
         if (e.target.files[0].size > 2097152) {
-            this.setState({ errorFileSize: true });
-            this.setState({ errorEmptyFile: false });
+            setErrorFileSize(true);
+            setErrorEmptyFile(false);
         } else {
-            this.setState({ errorEmptyFile: false });
-            this.setState({ errorFileSize: false });
-            this.setState({ file: e.target.files[0] });
+            setErrorEmptyFile(false);
+            setErrorFileSize(false);
+            setFile(e.target.files[0]);
         }
 
     }
 
-    upload() {
-        if (!this.state.file) {
-            console.log("LOG", this.state.file);
-            this.setState({ errorEmptyFile: true });
+    function upload() {
+        if (!file) {
+            // console.log("LOG", this.state.file);
+            setErrorEmptyFile(true);
         } else {
-            this.setState({ errorEmptyFile: false });
+            setErrorEmptyFile(false);
         }
-        this.setState({ img_url: '' });
-        this.setState({ waitForImage: true });
+
+        dispatch(removeProfileImg());
+        setWaitForImage(true);
 
         const formData = new FormData();
-        formData.append('file', this.state.file);
-        formData.append('email', this.props.email);
+        formData.append('file', file);
+        formData.append('email', user.email);
 
 
         fetch('/upload', {
@@ -49,80 +53,74 @@ export default class Uploader extends Component {
             .then((data) => {
 
                 console.log("images from server:", data);
-                this.props.updateProfileImg(data.img_url);
-                this.setState({ waitForImage: false });
-                this.setState({ img_url: data.img_url });
-
-
-
+                dispatch(updateProfileImg(data.img_url));
+                setWaitForImage(false);
             });
 
     }
-    close() {
-        this.props.toggleUploader();
+
+    function close() {
+        props.toggleUploader();
 
     }
 
+    return (
+        <>
+            <Modal
+                show={props.show}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Change your Profile Picture
+                    </Modal.Title>
+                    <button type="button" className="btn-close" aria-label="Close" onClick={() => close()}></button>
+                </Modal.Header>
+                <Modal.Body>
 
-    render() {
-        return (
-            <>
-                <Modal
-                    show={this.props.show}
-                    size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered
-                >
-                    <Modal.Header>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                            Change your Profile Picture
-                        </Modal.Title>
-                        <button type="button" className="btn-close" aria-label="Close" onClick={() => this.close()}></button>
-                    </Modal.Header>
-                    <Modal.Body>
+                    <Row>
+                        <Col md={8}>
+                            <div className='modal__body'>
 
-                        <Row>
-                            <Col md={8}>
-                                <div className='modal__body'>
+                                <Form.Group controlId="formFile" className="mb-3">
 
-                                    <Form.Group controlId="formFile" className="mb-3">
-                                        {/* <Form.Label>Select Image</Form.Label> */}
-                                        <Form.Control name="file" type="file" accept="image/*" onChange={(e) => this.setFile(e)} />
-                                    </Form.Group>
-                                    {/* <Input id="file" name="file" type="file" accept="image/*" onChange={(e) => this.setFile(e)} /> */}
-                                    {/* <label htmlFor="file"><span>Select Image</span></label> */}
-                                    {!this.state.errorFileSize && <Button onClick={() => this.upload()}>Upload Image</Button>}
-                                </div>
-                            </Col>
-                            <Col md={4}>
-                                <div className='modal__body-image'>
+                                    <Form.Control name="file" type="file" accept="image/*" onChange={(e) => changeFile(e)} />
+                                </Form.Group>
 
-                                    {this.state.waitForImage && !this.state.errorEmptyFile && !this.state.errorFileSize && <Spinner animation="border" role="status">
-                                        <span className="visually-hidden">Loading...</span>
-                                    </Spinner>}
+                                {!errorFileSize && <Button onClick={() => upload()}>Upload Image</Button>}
+                            </div>
+                        </Col>
+                        <Col md={4}>
+                            <div className='modal__body-image'>
 
-                                    {this.state.img_url && <img src={this.state.img_url} className="profilepic-modal" alt="profilepic" />}
+                                {waitForImage && !errorEmptyFile && !errorFileSize && <Spinner animation="border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner>}
 
-                                    {this.state.errorFileSize && <Alert key="warning" variant="warning">
-                                        File is too large
-                                    </Alert>}
+                                {user.img_url && <img src={user.img_url} className="profilepic-modal" alt="profilepic" />}
 
-                                    {this.state.errorEmptyFile && <Alert key="secondwarning" variant="warning">
-                                        Please select a file
-                                    </Alert>}
-                                </div>
-                            </Col>
-                        </Row>
+                                {errorFileSize && <Alert key="warning" variant="warning">
+                                    File is too large
+                                </Alert>}
 
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={() => this.close()}>Close</Button>
-                    </Modal.Footer>
-                </Modal>
-            </>
-        );
-    }
+                                {errorEmptyFile && <Alert key="secondwarning" variant="warning">
+                                    Please select a file
+                                </Alert>}
+                            </div>
+                        </Col>
+                    </Row>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => close()}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    );
 }
+
 
 
 

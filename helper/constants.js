@@ -3,6 +3,6 @@ module.exports.BUTTON = {
     UNFRIEND: 'unfriend',
     ACCEPT: 'Accept friend request',
     CANCEL: 'Cancel friend request',
-    REJECT: ' Reject friend request'
+    REJECT: 'Reject friend request'
 };
 

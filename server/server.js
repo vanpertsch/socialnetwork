@@ -121,8 +121,23 @@ io.on('connection', function (socket) {
 
     db.getLastTenChatMessages()
         .then(({ rows }) => {
-            console.log("getlast", rows);
-            socket.emit('chatMessages', rows);
+
+            const results = rows.map(row => {
+                const date = new Date(row.created_at);
+
+                const formatedDate = new Intl.DateTimeFormat("en-GB", {
+                    dateStyle: "long",
+                    timeStyle: "short",
+                }).format(date);
+
+                return {
+                    ...row,
+                    created_at: formatedDate
+                };
+
+            });
+
+            socket.emit('chatMessages', results);
         })
         .catch(err => {
             console.log('err getting last 10 messages: ', err);
@@ -139,9 +154,16 @@ io.on('connection', function (socket) {
                 return db.getLastMessage(rows[0].id);
             })
             .then(({ rows }) => {
-                console.log(rows[0]);
+                console.log("before", rows[0]);
+                const date = new Date(rows[0].created_at);
+                const formatedDate = new Intl.DateTimeFormat("en-GB", {
+                    dateStyle: "long",
+                    timeStyle: "short",
+                }).format(date);
+                console.log("DATUM", formatedDate);
+
                 io.emit('chatMessage', {
-                    created_at: rows[0].created_at,
+                    created_at: formatedDate,
                     first: rows[0].first,
                     img_url: rows[0].img_url,
                     last: rows[0].last,

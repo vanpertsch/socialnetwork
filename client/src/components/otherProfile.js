@@ -5,7 +5,10 @@ import FriendButton from './friendButton.js';
 
 
 export default function OtherProfile() {
+
     const [user, setUser] = useState();
+
+
     const [error, setError] = useState();
     const { id } = useParams();
     const history = useHistory();
@@ -31,7 +34,7 @@ export default function OtherProfile() {
 
 
             }).catch((err) => {
-                console.log("err in did mount", err);
+                console.log("err in /api/otherprofile/ ", err);
             });
 
 

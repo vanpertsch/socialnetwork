@@ -1,9 +1,9 @@
 
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import Registration from './components/welcome/registration';
 import Login from './components/welcome/login';
 import ResetPassword from './components/welcome/reset-password';
-import { Container, Navbar, Nav, NavLink } from 'react-bootstrap';
+import { Container, Navbar, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Welcome() {
@@ -14,12 +14,10 @@ export default function Welcome() {
                 <Container>
                     <Navbar.Brand>
                         <Nav.Link
-                            key="/logo"
+                            key="/"
                             to="/"
                             as={NavLink}
                             activeclassname="active"
-
-
                         ><span>
                                 NETW
                             </span>
