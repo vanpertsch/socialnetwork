@@ -10,10 +10,25 @@ const cookieSession = require('cookie-session');
 
 
 const server = require('http').Server(app);
-const io = require('socket.io')(server, {
-    allowRequest: (req, callback) =>
-        callback(null, req.headers.referer.startsWith("http://localhost:3000"))
-});
+
+// const io = require('socket.io')(server, {
+//     allowRequest: (req, callback) =>
+//         callback(null, req.headers.referer.startsWith("http://localhost:3000"))
+// });
+
+let io;
+if (process.env.NODE_ENV == 'production') {
+    io = require('socket.io')(server, {
+        allowRequest: (req, callback) =>
+            callback(null, req.headers.referer.startsWith("https://react-socialnetwork.herokuapp.com/"))
+    });
+} else {
+    io = require('socket.io')(server, {
+        allowRequest: (req, callback) =>
+            callback(null, req.headers.referer.startsWith("http://localhost:3000"))
+    });
+}
+
 
 const db = require("../helper/db.js");
 const { hash, compare } = require("../helper/bc.js");
