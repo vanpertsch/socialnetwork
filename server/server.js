@@ -104,7 +104,8 @@ app.get("*", function (req, res) {
 
 
 
-server.listen(3001); // it's server, not app, that does the listening
+server.listen(process.env.PORT || 3001); // it's server, not app, that does the listening
+
 
 
 
