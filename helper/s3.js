@@ -1,5 +1,5 @@
 const aws = require("aws-sdk");
-const { AWS_SECRET, AWS_KEY } = require("../.secrets");
+const { AWS_SECRET, AWS_KEY } = require("../secrets");
 const fs = require("fs");
 
 // const {promisify} = require("util");

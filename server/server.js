@@ -45,7 +45,7 @@ app.use(express.urlencoded({
     extended: false
 }));
 
-const COOKIE_SECRET = process.env.COOKIE_SECRET || require("../.secrets.json").COOKIE_SECRET;
+const COOKIE_SECRET = process.env.COOKIE_SECRET || require("../secrets.json").COOKIE_SECRET;
 
 //Enables session cookies
 const cookieSessionMiddleware = cookieSession({
