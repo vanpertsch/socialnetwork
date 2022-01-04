@@ -1,9 +1,11 @@
 const aws = require("aws-sdk");
+
 const fs = require("fs");
 
 // const {promisify} = require("util");
 
-// const { AWS_SECRET, AWS_KEY } = require("../secrets");
+
+
 let secrets;
 if (process.env.NODE_ENV == 'production') {
     secrets = process.env; // in prod the secrets are environment variables
@@ -11,10 +13,9 @@ if (process.env.NODE_ENV == 'production') {
     secrets = require('../secrets'); // in dev they are in secrets.json which is listed in .gitignore
 }
 
-const s3 = new aws.SES({
+const s3 = new aws.S3({
     accessKeyId: secrets.AWS_KEY,
-    secretAccessKey: secrets.AWS_SECRET,
-
+    secretAccessKey: secrets.AWS_SECRET
 });
 
 
